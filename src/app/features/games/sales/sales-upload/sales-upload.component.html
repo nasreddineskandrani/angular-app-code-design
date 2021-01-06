@@ -1,0 +1,6 @@
+<div>
+	<button (click)="toggleUploadSection()">Upload Data</button>
+	<div *ngIf="showUploadSection">
+		<input type="text" placeholder="YYYY-MM-DD" (change)="onNewInput($event)" />
+  </div>
+	</div>

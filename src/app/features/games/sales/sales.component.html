@@ -1,0 +1,20 @@
+<h1>Sales</h1>
+<hr />
+<br />
+<br />
+
+<app-sales-upload></app-sales-upload>
+
+<br />
+
+<div style="border: 2px solid black; padding:  5px;">
+	<plotly-chart-history (onDateSelectionChange)="onDateSelectionChange($event)">
+	</plotly-chart-history>
+</div>
+
+<br />
+<br />
+
+<div *ngIf="selectedDate" style="border: 1px solid blue;font-size: 1.3rem; color: blue;">
+	{{ selectedDate }} used in some other component
+</div>
