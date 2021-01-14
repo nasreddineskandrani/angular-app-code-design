@@ -6,6 +6,9 @@ solution 1: with basic services only
 
 https://github.com/nasreddineskandrani/angular-app-code-design/tree/exer1/dumb-try-with-services-only
 
+solution 2: with ngrx
+https://github.com/nasreddineskandrani/angular-app-code-design/tree/exer1/ngrx-try
+
 # Exercice 2
 
 --
