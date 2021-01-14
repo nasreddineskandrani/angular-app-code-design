@@ -28,6 +28,6 @@ const reducer = createReducer(
   })
 );
 
-export function gameReducer(state: GamesState | undefined, action: Action) {
+export function gameReducer(state: GamesState | undefined, action: Action): GamesState {
   return reducer(state, action);
 }

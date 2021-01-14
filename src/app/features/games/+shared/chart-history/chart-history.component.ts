@@ -14,7 +14,7 @@ import { filter, map } from 'rxjs/operators';
 
 const last10Days = 10;
 
-function getConfig(partial: any) {
+function getConfig(partial: any): {} {
   return {
     data: [
       {
@@ -40,7 +40,7 @@ function getConfig(partial: any) {
 
 @UntilDestroy()
 @Component({
-  selector: 'plotly-chart-history',
+  selector: 'app-plotly-chart-history',
   template: `
     <div *ngIf="graph$ | async as graph">
       <div>{{ startDate | date }} <b> to </b> {{ endDate | date }}</div>
@@ -71,7 +71,7 @@ export class ChartHistoryComponent implements OnInit {
   @Input() id: string;
 
   @Output()
-  onDateSelectionChange = new EventEmitter<Date>();
+  dateSelectionChange = new EventEmitter<Date>();
 
   startDate: Date;
   endDate: Date;
@@ -89,7 +89,7 @@ export class ChartHistoryComponent implements OnInit {
     */
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.listeners();
 
     this.endDate = new Date();
@@ -99,7 +99,7 @@ export class ChartHistoryComponent implements OnInit {
     this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
   }
 
-  listeners() {
+  listeners(): void {
     this.graph$ = this.store.pipe(
         select(getGamesHistoryPerId(this.id)),
         filter(s => !!s),
@@ -195,7 +195,7 @@ export class ChartHistoryComponent implements OnInit {
   }
   */
 
-  addPastData() {
+  addPastData(): void {
     const endDate = new Date(this.startDate);
     const start = new Date(endDate);
     start.setDate(start.getDate() - 180);
@@ -203,13 +203,13 @@ export class ChartHistoryComponent implements OnInit {
     this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
   }
 
-  plotlyClick(a: any) {
+  plotlyClick(a: any): void {
     this.selectedDate = new Date(a.points[0].x);
-    this.onDateSelectionChange.emit(this.selectedDate);
+    this.dateSelectionChange.emit(this.selectedDate);
   }
 
-  clearSelection() {
+  clearSelection(): void {
     this.selectedDate = undefined;
-    this.onDateSelectionChange.emit(undefined);
+    this.dateSelectionChange.emit(undefined);
   }
 }

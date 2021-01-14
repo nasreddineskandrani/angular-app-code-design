@@ -23,7 +23,7 @@ import { GamesService } from './games.service';
 export class GamesComponent implements OnDestroy {
   constructor(private gamesService: GamesService) {}
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.gamesService.notify();
   }
 }
