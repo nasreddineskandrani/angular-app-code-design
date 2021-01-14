@@ -19,7 +19,7 @@ export class ConferencesEffects {
                 catchError(error => of(FetchHistoryError({ id: '' })))
             );
         })
-        );   
+        );
     });
 
     constructor(private actions$: Actions, private conferencesApiService: ConferencesApiService) {}

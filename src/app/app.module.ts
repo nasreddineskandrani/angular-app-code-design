@@ -1,11 +1,11 @@
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
-import { AppRoutingModule } from "./app-routing.module";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
 
 ///
 
-import { AppComponent } from "./app.component";
+import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './+state/app.effects';
 import { StoreModule } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { environment } from '../environments/environment';
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule, 
+    AppRoutingModule,
     EffectsModule.forRoot([AppEffects]),
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : []

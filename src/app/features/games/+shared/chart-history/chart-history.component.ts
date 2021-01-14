@@ -3,15 +3,9 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  Inject,
   Input
-} from "@angular/core";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { ChartHistoryService } from "./chart-history.service";
-import {
-  HISTORY_API_SERVICE,
-  IApiService
-} from "../../../../api/i-api.service";
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { FetchGameHistory } from './+state/chart-history.actions';
 import { select, Store } from '@ngrx/store';
 import { GamesState } from '../../+state/games.reducer';
@@ -26,15 +20,15 @@ function getConfig(partial: any) {
       {
         x: partial.X,
         y: partial.Y,
-        type: "scatter",
-        mode: "markers"
+        type: 'scatter',
+        mode: 'markers'
       }
     ],
     layout: {
       // title: "A Fancy Plot",
-      height: "100%",
+      height: '100%',
       xaxis: {
-        type: "date",
+        type: 'date',
         range: partial.xRange
       }
     },
@@ -46,7 +40,7 @@ function getConfig(partial: any) {
 
 @UntilDestroy()
 @Component({
-  selector: "plotly-chart-history",
+  selector: 'plotly-chart-history',
   template: `
     <div *ngIf="graph$ | async as graph">
       <div>{{ startDate | date }} <b> to </b> {{ endDate | date }}</div>

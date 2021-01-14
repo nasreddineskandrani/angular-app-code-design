@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { ChartHistoryService } from "../../+shared/chart-history/chart-history.service";
+import { ChartHistoryService } from '../../+shared/chart-history/chart-history.service';
 
 ///
 

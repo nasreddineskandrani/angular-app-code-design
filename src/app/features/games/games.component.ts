@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from "@angular/core";
-import { GamesService } from "./games.service";
+import { Component, OnDestroy } from '@angular/core';
+import { GamesService } from './games.service';
 
 @Component({
-  selector: "app-sales",
+  selector: 'app-sales',
   template: `
     <h1>Games</h1>
     <hr />

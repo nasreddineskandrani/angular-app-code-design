@@ -1,12 +1,12 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { Routes, RouterModule } from "@angular/router";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
 
-import { SalesComponent } from "./sales.component";
+import { SalesComponent } from './sales.component';
 
 const routes: Routes = [
   {
-    path: "",
+    path: '',
     component: SalesComponent
   }
 ];

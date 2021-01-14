@@ -19,7 +19,7 @@ export class SalesEffects {
                 catchError(error => of(FetchHistoryError({ id: '' })))
             );
         })
-        );   
+        );
     });
 
     constructor(private actions$: Actions, private salesApiService: SalesApiService) {}

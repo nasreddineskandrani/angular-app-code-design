@@ -1,21 +1,21 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: "games",
+    path: 'games',
     loadChildren: () =>
-      import("./features/games/games.module").then(m => m.GamesModule)
+      import('./features/games/games.module').then(m => m.GamesModule)
   },
   {
-    path: "home",
+    path: 'home',
     loadChildren: () =>
-      import("./features/home/home.module").then(m => m.HomeModule)
+      import('./features/home/home.module').then(m => m.HomeModule)
   },
   {
-    path: "",
-    redirectTo: "home",
-    pathMatch: "full"
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
   }
 ];
 

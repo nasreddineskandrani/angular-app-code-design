@@ -1,23 +1,23 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { Routes, RouterModule } from "@angular/router";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
 
-import { GamesComponent } from "./games.component";
+import { GamesComponent } from './games.component';
 
 const routes: Routes = [
   {
-    path: "",
+    path: '',
     component: GamesComponent,
     children: [
       {
-        path: "sales",
+        path: 'sales',
         loadChildren: () =>
-          import("./sales/sales.module").then(m => m.SalesModule)
+          import('./sales/sales.module').then(m => m.SalesModule)
       },
       {
-        path: "conferences",
+        path: 'conferences',
         loadChildren: () =>
-          import("./conferences/conferences.module").then(
+          import('./conferences/conferences.module').then(
             m => m.ConferencesModule
           )
       }

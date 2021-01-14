@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { Observable, of } from "rxjs";
+import { Observable, of } from 'rxjs';
 
 ///
 
-import { mockConferences } from "./mock-data";
+import { mockConferences } from './mock-data';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class ConferencesApiService {
   constructor() {}

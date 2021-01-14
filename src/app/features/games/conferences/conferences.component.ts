@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "app-conferences",
+  selector: 'app-conferences',
   template: `
     <h1>Conferences</h1>
     <hr />

@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 ///
-import { GamesService } from "../../games.service";
+import { GamesService } from '../../games.service';
 
 @UntilDestroy()
 @Injectable()
