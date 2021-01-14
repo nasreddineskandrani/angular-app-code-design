@@ -13,7 +13,7 @@ import * as from from './+state/games.reducer';
     RouterModule,
     CommonModule,
     GamesRoutingModule,
-    StoreModule.forFeature(from.FeatureKey, from.gameReducer)
+    StoreModule.forFeature(from.GamesFeatureKey, from.gameReducer)
   ],
   declarations: [],
   providers: [GamesService]

@@ -6,7 +6,7 @@ import { Component } from "@angular/core";
     <h1>Conferences</h1>
     <hr />
 
-    <plotly-chart-history> </plotly-chart-history>
+    <plotly-chart-history id='conferences'> </plotly-chart-history>
   `
 })
 export class ConferencesComponent {}

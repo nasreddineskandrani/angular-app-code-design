@@ -1,9 +1,10 @@
 {
-  "extends": "tslint:recommended",
+  "extends": ["tslint:recommended", "tslint-etc"],
   "rulesDirectory": [
     "codelyzer"
   ],
   "rules": {
+    "no-unused-declaration": true,
     "align": {
       "options": [
         "parameters",

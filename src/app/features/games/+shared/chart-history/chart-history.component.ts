@@ -1,10 +1,10 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   Output,
   EventEmitter,
-  Inject
+  Inject,
+  Input
 } from "@angular/core";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { ChartHistoryService } from "./chart-history.service";
@@ -12,6 +12,11 @@ import {
   HISTORY_API_SERVICE,
   IApiService
 } from "../../../../api/i-api.service";
+import { FetchGameHistory } from './+state/chart-history.actions';
+import { select, Store } from '@ngrx/store';
+import { GamesState } from '../../+state/games.reducer';
+import { getGamesHistoryPerId } from '../../+state/games.selectors';
+import { filter, map } from 'rxjs/operators';
 
 const last10Days = 10;
 
@@ -43,7 +48,7 @@ function getConfig(partial: any) {
 @Component({
   selector: "plotly-chart-history",
   template: `
-    <div>
+    <div *ngIf="graph$ | async as graph">
       <div>{{ startDate | date }} <b> to </b> {{ endDate | date }}</div>
       <div *ngIf="selectedDate" style="color: green">
         <div style="font-size: 1.5rem">
@@ -68,7 +73,9 @@ function getConfig(partial: any) {
     </div>
   `
 })
-export class ChartHistoryComponent implements OnInit, OnDestroy {
+export class ChartHistoryComponent implements OnInit {
+  @Input() id: string;
+
   @Output()
   onDateSelectionChange = new EventEmitter<Date>();
 
@@ -78,14 +85,44 @@ export class ChartHistoryComponent implements OnInit, OnDestroy {
 
   sales: any;
 
-  public graph;
+  public graph$;
 
   constructor(
+    private store: Store<GamesState>
+    /*
     @Inject(HISTORY_API_SERVICE) private historyApiService: IApiService,
     private chartHistoryService: ChartHistoryService
+    */
   ) {}
 
   ngOnInit() {
+    this.listeners();
+
+    this.endDate = new Date();
+    const start = new Date(this.endDate);
+    start.setDate(start.getDate() - last10Days);
+    this.startDate = start;
+    this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
+  }
+
+  listeners() {
+    this.graph$ = this.store.pipe(
+        select(getGamesHistoryPerId(this.id)),
+        filter(s => !!s),
+        map(s => {
+          return getConfig({
+            X: s.map(item => item.date),
+            Y: s.map(item => item.cash),
+            xRange: [this.startDate, this.endDate]
+          });
+        })
+      );
+  }
+
+  /*
+  ngOnInit() {
+    this.store.dispatch(GameHistoryInit);
+
     if (this.chartHistoryService.startDate) {
       this.startDate = this.chartHistoryService.startDate;
       this.endDate = this.chartHistoryService.endDate;
@@ -161,6 +198,15 @@ export class ChartHistoryComponent implements OnInit, OnDestroy {
           xRange: [this.startDate, this.endDate]
         });
       });
+  }
+  */
+
+  addPastData() {
+    const endDate = new Date(this.startDate);
+    const start = new Date(endDate);
+    start.setDate(start.getDate() - 180);
+    this.startDate = start;
+    this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
   }
 
   plotlyClick(a: any) {
