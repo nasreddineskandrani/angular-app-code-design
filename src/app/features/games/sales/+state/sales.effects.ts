@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { SalesApiService } from 'src/app/api/sales-api.service';
-import { FetchHistoryError, FetchHistorySuccess, FetchGameHistory } from '../../+shared/chart-history/+state/chart-history.actions';
+import { FetchGameHistory, FetchHistoryError, FetchHistorySuccess } from '../../+shared/chart-history/+state/chart-history.actions';
 
 @Injectable()
 export class SalesEffects {
@@ -15,7 +15,12 @@ export class SalesEffects {
         }),
         switchMap(action => {
             return this.salesApiService.get(action.startDate, action.endDate).pipe(
-                map(res => FetchHistorySuccess({ id: action.id, data: res })),
+                map(res => FetchHistorySuccess({
+                    id: action.id,
+                    startDate: action.startDate,
+                    endDate: action.endDate,
+                    data: res
+                })),
                 catchError(error => of(FetchHistoryError({ id: '' })))
             );
         })

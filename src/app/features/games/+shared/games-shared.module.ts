@@ -10,12 +10,11 @@ PlotlyModule.plotlyjs = PlotlyJS;
 ///
 
 import { ChartHistoryComponent } from './chart-history/chart-history.component';
-import { ChartHistoryService } from './chart-history/chart-history.service';
 
 @NgModule({
   imports: [CommonModule, PlotlyModule],
   declarations: [ChartHistoryComponent],
-  providers: [ChartHistoryService],
+  providers: [],
   exports: [ChartHistoryComponent]
 })
 export class GamesSharedModule {}

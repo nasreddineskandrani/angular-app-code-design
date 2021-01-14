@@ -6,11 +6,12 @@ import {
   Input
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { FetchGameHistory } from './+state/chart-history.actions';
 import { select, Store } from '@ngrx/store';
 import { GamesState } from '../../+state/games.reducer';
-import { getGamesHistoryPerId } from '../../+state/games.selectors';
+import { getGamesHistorStartDate, getGamesHistoryPerId } from '../../+state/games.selectors';
 import { filter, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { FetchGameHistory } from './+state/chart-history.actions';
 
 const last10Days = 10;
 
@@ -82,6 +83,7 @@ export class ChartHistoryComponent implements OnInit {
   public graph$;
 
   constructor(
+    private router: Router,
     private store: Store<GamesState>
     /*
     @Inject(HISTORY_API_SERVICE) private historyApiService: IApiService,
@@ -91,15 +93,30 @@ export class ChartHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.listeners();
-
-    this.endDate = new Date();
-    const start = new Date(this.endDate);
-    start.setDate(start.getDate() - last10Days);
-    this.startDate = start;
-    this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
   }
 
   listeners(): void {
+    this.store.pipe(
+      select(getGamesHistorStartDate(this.id)),
+    ).subscribe(d => {
+        console.log('getGamesHistorStartDate', d);
+        if (!d) {
+          const end = new Date();
+          const start = new Date(end);
+          start.setDate(start.getDate() - last10Days);
+          this.store.dispatch(FetchGameHistory({id: this.id, startDate: start, endDate: end }));
+          /*
+          this.router.navigate([], {
+            queryParams: {startDate: this.startDate, endData: this.endDate}, queryParamsHandling: 'merge' }).then(() => {
+            this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
+          });
+          */
+        } else {
+          this.startDate = d.startDate;
+          this.endDate = d.endDate;
+        }
+    });
+
     this.graph$ = this.store.pipe(
         select(getGamesHistoryPerId(this.id)),
         filter(s => !!s),

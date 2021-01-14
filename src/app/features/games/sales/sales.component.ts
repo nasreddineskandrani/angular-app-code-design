@@ -1,20 +1,18 @@
-import { Component } from '@angular/core';
-import { ChartHistoryService } from '../+shared/chart-history/chart-history.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html'
 })
-export class SalesComponent {
+export class SalesComponent implements OnInit {
   selectedDate: Date;
 
-  constructor(private salesHistoryService: ChartHistoryService) {}
+  constructor() {}
 
-  ngOnInit() {
-    this.selectedDate = this.salesHistoryService.selectedDate;
+  ngOnInit(): void {
   }
 
-  onDateSelectionChange(date: Date) {
+  onDateSelectionChange(date: Date): void {
     this.selectedDate = date;
   }
 }

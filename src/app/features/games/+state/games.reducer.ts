@@ -22,7 +22,9 @@ const reducer = createReducer(
       ...state,
       [action.id]: {
         ...state[action.id],
-        historyData: action.data
+        historyData: action.data,
+        startDate: action.startDate,
+        endDate: action.endDate
       }
     };
   })

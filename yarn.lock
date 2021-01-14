@@ -1228,6 +1228,13 @@
   dependencies:
     tslib "^2.0.0"
 
+"@ngrx/router-store@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@ngrx/router-store/-/router-store-10.1.2.tgz#f8083121611ba72450998eb37dffc26dd17f8ab0"
+  integrity sha512-IBsZee5ZUmLbXkY/O4OjhJP1Q6mdu4lcLcQ9jeXsdCMH/Vvc0EGK+MlhsZrxv5+v2ZXb1bhtKsLBUsTovanLWA==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngrx/schematics@^10.1.2":
   version "10.1.2"
   resolved "https://registry.yarnpkg.com/@ngrx/schematics/-/schematics-10.1.2.tgz#21ff7d5c1cbaee1abb75f8561bcedd017c99bc94"
