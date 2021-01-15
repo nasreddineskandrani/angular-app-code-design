@@ -87,10 +87,9 @@ export class ChartHistoryComponent implements OnInit {
   listeners(): void {
     this.range$ = this.store.pipe(
       select(getGamesHistoryDateRange(this.id)),
-      tap(r => {
-        if (!r) {
-          this.store.dispatch(InitGameHistory({id: this.id }));
-        }
+      filter(r => !r),
+      tap(() => {
+        this.store.dispatch(InitGameHistory({id: this.id }));
       })
     );
 
