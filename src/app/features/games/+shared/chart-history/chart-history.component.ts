@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { select, Store } from '@ngrx/store';
 import { GamesState } from '../../+state/games.reducer';
 import { getGamesHistorStartDate, getGamesHistoryPerId } from '../../+state/games.selectors';
@@ -98,6 +98,7 @@ export class ChartHistoryComponent implements OnInit {
   listeners(): void {
     this.store.pipe(
       select(getGamesHistorStartDate(this.id)),
+      untilDestroyed(this)
     ).subscribe(d => {
         console.log('getGamesHistorStartDate', d);
         if (!d) {
