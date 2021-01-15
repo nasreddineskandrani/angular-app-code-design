@@ -3,6 +3,7 @@ import {
 } from '@ngrx/store';
 import { createReducer, Action } from '@ngrx/store';
 import { FetchHistorySuccess } from '../+shared/chart-history/+state/chart-history.actions';
+import { LeaveGamesPage } from './games.actions';
 
 export const GamesFeatureKey = 'games';
 
@@ -27,6 +28,9 @@ const reducer = createReducer(
         endDate: action.endDate
       }
     };
+  }),
+  on(LeaveGamesPage, (state, action) => {
+    return {};
   })
 );
 

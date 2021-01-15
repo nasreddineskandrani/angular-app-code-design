@@ -1,4 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { LeaveGamesPage } from './+state/games.actions';
+import { GamesState } from './+state/games.reducer';
 import { GamesService } from './games.service';
 
 @Component({
@@ -21,9 +24,9 @@ import { GamesService } from './games.service';
   `
 })
 export class GamesComponent implements OnDestroy {
-  constructor(private gamesService: GamesService) {}
+  constructor(private store: Store<GamesState>) {}
 
   ngOnDestroy(): void {
-    this.gamesService.notify();
+    this.store.dispatch(LeaveGamesPage());
   }
 }

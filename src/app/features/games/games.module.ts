@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 ///
 
 import { GamesRoutingModule } from './games-routing.module';
-import { GamesService } from './games.service';
 import { StoreModule } from '@ngrx/store';
 import * as from from './+state/games.reducer';
 
@@ -16,6 +15,6 @@ import * as from from './+state/games.reducer';
     StoreModule.forFeature(from.GamesFeatureKey, from.gameReducer)
   ],
   declarations: [],
-  providers: [GamesService]
+  providers: []
 })
 export class GamesModule {}
