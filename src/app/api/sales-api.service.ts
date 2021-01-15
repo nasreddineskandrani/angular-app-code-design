@@ -14,9 +14,12 @@ export class SalesApiService {
 
   get(startDate: Date, endDate: Date): Observable<any[]> {
     console.log(startDate, endDate);
-    const result = {
-      ...mockSales,
-      data: mockSales.data.filter(item => {
+    let finalDatachunk = mockSales.data;
+    const newData = localStorage.getItem('fakeNewData');
+    if (newData) {
+      finalDatachunk = [...finalDatachunk, ...JSON.parse(newData)];
+    }
+    const result = finalDatachunk.filter(item => {
         const d = new Date(item.date);
         if (
           startDate.getTime() <= d.getTime() &&
@@ -26,8 +29,7 @@ export class SalesApiService {
         }
 
         return false;
-      })
-    };
-    return of(result.data);
+      });
+    return of(result);
   }
 }

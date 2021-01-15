@@ -29,7 +29,7 @@ export class ConferencesEffects {
                     endDate: end,
                     data: res
                  })),
-                catchError(error => of(FetchHistoryError({ id: '' })))
+                catchError(error => of(FetchHistoryError({ id: '', error: '' })))
             );
         })
         );
@@ -61,7 +61,7 @@ export class ConferencesEffects {
                             data: res
                         });
                     }),
-                    catchError(error => of(FetchHistoryError({ id: '' })))
+                    catchError(error => of(FetchHistoryError({ id: '', error: '' })))
                 );
             })
         );

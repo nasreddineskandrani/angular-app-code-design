@@ -5,4 +5,4 @@ export const AddPastGameHistory = createAction('[Games History] Add past data pe
 
 export const FetchHistorySuccess = createAction('[Games History] Fetch SUCCESS',
     props<{ id: string, startDate: Date, endDate: Date, data: any[] }>());
-export const FetchHistoryError = createAction('[Games History] Fetch ERROR', props<{ id: string }>());
+export const FetchHistoryError = createAction('[Games History] Fetch ERROR', props<{ id: string, error: any }>());

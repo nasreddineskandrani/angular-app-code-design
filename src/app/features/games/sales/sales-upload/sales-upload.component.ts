@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { SalesUploadService } from './sales-upload.service';
+import { Store } from '@ngrx/store';
+import { UploadedSalesNewData } from '../+state/sales.actions';
+import { GamesState } from '../../+state/games.reducer';
 
-function isDate(_date) {
-  const _regExp = new RegExp(
+function isDate(date: string): boolean {
+  const regExp = new RegExp(
     '^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])?$'
   );
-  return _regExp.test(_date);
+  return regExp.test(date);
 }
 
 @Component({
@@ -15,20 +17,32 @@ function isDate(_date) {
 export class SalesUploadComponent {
   showUploadSection = false;
 
-  constructor(private salesUploadService: SalesUploadService) {}
+  constructor(private store: Store<GamesState>) {}
 
-  toggleUploadSection() {
+  toggleUploadSection(): void {
     this.showUploadSection = !this.showUploadSection;
   }
 
-  onNewInput(e: any) {
+  onNewInput(e: any): void {
     console.log('onNewInput', e.target.value);
     if (!isDate(e.target.value)) {
       alert('you did not enter a valid date');
       return;
     }
-    const date = new Date(e.target.value);
 
-    this.salesUploadService.notify(date);
+    // fake backend call and just save to locale storage
+    const dataStorageStr = localStorage.getItem('fakeNewData');
+    let fakeData = [];
+    if (dataStorageStr) {
+      fakeData = JSON.parse(dataStorageStr);
+    }
+    fakeData.push({
+      date: e.target.value,
+      cash: '1532',
+      nb: 30
+    });
+    localStorage.setItem('fakeNewData', JSON.stringify(fakeData));
+
+    this.store.dispatch(UploadedSalesNewData());
   }
 }
