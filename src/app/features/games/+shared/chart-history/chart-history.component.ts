@@ -5,15 +5,12 @@ import {
   EventEmitter,
   Input
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { select, Store } from '@ngrx/store';
 import { GamesState } from '../../+state/games.reducer';
 import { getGamesHistorStartDate, getGamesHistoryPerId } from '../../+state/games.selectors';
-import { filter, map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { FetchGameHistory } from './+state/chart-history.actions';
-
-const last10Days = 10;
+import { concatMap, filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { AddPastGameHistory, InitGameHistory } from './+state/chart-history.actions';
+import { of } from 'rxjs';
 
 function getConfig(partial: any): {} {
   return {
@@ -39,12 +36,11 @@ function getConfig(partial: any): {} {
   };
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-plotly-chart-history',
   template: `
-    <div *ngIf="graph$ | async as graph">
-      <div>{{ startDate | date }} <b> to </b> {{ endDate | date }}</div>
+    <div>
+      <div *ngIf="range$ | async as range">{{ range.startDate | date }} <b> to </b> {{ range.endDate | date }}</div>
       <div *ngIf="selectedDate" style="color: green">
         <div style="font-size: 1.5rem">
           Selection: {{ selectedDate | date }}
@@ -53,7 +49,7 @@ function getConfig(partial: any): {} {
           >
         </div>
       </div>
-      <div style="border: 1px solid black; height: 100%;">
+      <div *ngIf="graph$ | async as graph" style="border: 1px solid black; height: 100%;">
         <plotly-plot
           [data]="graph.data"
           [layout]="graph.layout"
@@ -74,151 +70,48 @@ export class ChartHistoryComponent implements OnInit {
   @Output()
   dateSelectionChange = new EventEmitter<Date>();
 
-  startDate: Date;
-  endDate: Date;
   selectedDate: Date;
 
-  sales: any;
-
   public graph$;
+  public range$;
 
   constructor(
-    private router: Router,
     private store: Store<GamesState>
-    /*
-    @Inject(HISTORY_API_SERVICE) private historyApiService: IApiService,
-    private chartHistoryService: ChartHistoryService
-    */
   ) {}
 
   ngOnInit(): void {
     this.listeners();
+
   }
 
   listeners(): void {
-    this.store.pipe(
+    this.range$ = this.store.pipe(
       select(getGamesHistorStartDate(this.id)),
-      untilDestroyed(this)
-    ).subscribe(d => {
-        console.log('getGamesHistorStartDate', d);
-        if (!d) {
-          const end = new Date();
-          const start = new Date(end);
-          start.setDate(start.getDate() - last10Days);
-          this.store.dispatch(FetchGameHistory({id: this.id, startDate: start, endDate: end }));
-          /*
-          this.router.navigate([], {
-            queryParams: {startDate: this.startDate, endData: this.endDate}, queryParamsHandling: 'merge' }).then(() => {
-            this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
-          });
-          */
-        } else {
-          this.startDate = d.startDate;
-          this.endDate = d.endDate;
+      tap(r => {
+        if (!r) {
+          this.store.dispatch(InitGameHistory({id: this.id }));
         }
-    });
+      })
+    );
 
     this.graph$ = this.store.pipe(
         select(getGamesHistoryPerId(this.id)),
         filter(s => !!s),
-        map(s => {
+        concatMap(s => of(s).pipe(
+          withLatestFrom(this.store.pipe(select(getGamesHistorStartDate(this.id))))
+        )),
+        map(([s, latest]) => {
           return getConfig({
             X: s.map(item => item.date),
             Y: s.map(item => item.cash),
-            xRange: [this.startDate, this.endDate]
+            xRange: [latest.startDate, latest.endDate]
           });
         })
       );
   }
 
-  /*
-  ngOnInit() {
-    this.store.dispatch(GameHistoryInit);
-
-    if (this.chartHistoryService.startDate) {
-      this.startDate = this.chartHistoryService.startDate;
-      this.endDate = this.chartHistoryService.endDate;
-      this.selectedDate = this.chartHistoryService.selectedDate;
-      this.sales = this.chartHistoryService.data;
-      this.graph = getConfig({
-        X: this.sales.map(item => item.date),
-        Y: this.sales.map(item => item.cash),
-        xRange: [this.startDate, this.endDate]
-      });
-    } else {
-      this.endDate = new Date();
-      const start = new Date(this.endDate);
-      start.setDate(start.getDate() - last10Days);
-      this.startDate = start;
-
-      this.historyApiService
-        .get(this.startDate, this.endDate)
-        .pipe(untilDestroyed(this))
-        .subscribe(sales => {
-          this.sales = sales;
-          this.graph = getConfig({
-            X: this.sales.map(item => item.date),
-            Y: this.sales.map(item => item.cash),
-            xRange: [this.startDate, this.endDate]
-          });
-        });
-    }
-
-    this.chartHistoryService.onNewData$
-      .pipe(untilDestroyed(this))
-      .subscribe(newDate => {
-        this.sales = [
-          ...this.sales,
-          ...[
-            {
-              date: newDate,
-              cash: 1,
-              nb: 30
-            }
-          ]
-        ];
-        this.graph = getConfig({
-          X: this.sales.map(item => item.date),
-          Y: this.sales.map(item => item.cash),
-          xRange: [this.startDate, this.endDate]
-        });
-      });
-  }
-
-  ngOnDestroy() {
-    this.chartHistoryService.startDate = this.startDate;
-    this.chartHistoryService.endDate = this.endDate;
-    this.chartHistoryService.selectedDate = this.selectedDate;
-    this.chartHistoryService.data = this.sales;
-  }
-
-  addPastData() {
-    const endDate = new Date(this.startDate);
-
-    const start = new Date(endDate);
-    start.setDate(start.getDate() - 180);
-    this.startDate = start;
-
-    this.historyApiService
-      .get(this.startDate, endDate)
-      .pipe(untilDestroyed(this))
-      .subscribe(sales => {
-        this.sales = [...sales, ...this.sales];
-        this.graph = getConfig({
-          X: this.sales.map(item => item.date),
-          Y: this.sales.map(item => item.cash),
-          xRange: [this.startDate, this.endDate]
-        });
-      });
-  }
-  */
-
   addPastData(): void {
-    const endDate = new Date(this.startDate);
-    const start = new Date(endDate);
-    start.setDate(start.getDate() - 180);
-    this.startDate = start;
-    this.store.dispatch(FetchGameHistory({id: this.id, startDate: this.startDate, endDate: this.endDate }));
+    this.store.dispatch(AddPastGameHistory({id: this.id }));
   }
 
   plotlyClick(a: any): void {
