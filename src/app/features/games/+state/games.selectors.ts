@@ -9,7 +9,7 @@ export const getGamesHistoryPerId = (id: string) => createSelector(
 );
 
 
-export const getGamesHistorStartDate = (id: string) => createSelector(
+export const getGamesHistoryDateRange = (id: string) => createSelector(
     selectFeature,
     (state: any) => state[id] ? { startDate: state[id].startDate, endDate: state[id].endDate } : undefined
 );

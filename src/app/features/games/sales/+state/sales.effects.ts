@@ -6,7 +6,7 @@ import { catchError, concatMap, filter, map, switchMap, withLatestFrom } from 'r
 import { SalesApiService } from 'src/app/api/sales-api.service';
 import { InitGameHistory, FetchHistoryError, FetchHistorySuccess, AddPastGameHistory } from '../../+shared/chart-history/+state/chart-history.actions';
 import { GamesState } from '../../+state/games.reducer';
-import { getGamesHistorStartDate } from '../../+state/games.selectors';
+import { getGamesHistoryDateRange } from '../../+state/games.selectors';
 
 const last10Days = 10;
 
@@ -19,7 +19,7 @@ export class SalesEffects {
             return action.id === 'sales';
         }),
         concatMap(action => of(action).pipe(
-            withLatestFrom(this.store.pipe(select(getGamesHistorStartDate(action.id))))
+            withLatestFrom(this.store.pipe(select(getGamesHistoryDateRange(action.id))))
         )),
         switchMap(([action, latest]) => {
             const end = new Date();
@@ -47,7 +47,7 @@ export class SalesEffects {
                 return action.id === 'sales';
             }),
             concatMap(action => of(action).pipe(
-                withLatestFrom(this.store.pipe(select(getGamesHistorStartDate(action.id))))
+                withLatestFrom(this.store.pipe(select(getGamesHistoryDateRange(action.id))))
             )),
             switchMap(([action, latest]) => {
                 const end = new Date(latest.startDate);

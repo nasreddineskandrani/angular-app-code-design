@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { GamesState } from '../../+state/games.reducer';
-import { getGamesHistorStartDate, getGamesHistoryPerId } from '../../+state/games.selectors';
+import { getGamesHistoryDateRange, getGamesHistoryPerId } from '../../+state/games.selectors';
 import { concatMap, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AddPastGameHistory, InitGameHistory } from './+state/chart-history.actions';
 import { of } from 'rxjs';
@@ -86,7 +86,7 @@ export class ChartHistoryComponent implements OnInit {
 
   listeners(): void {
     this.range$ = this.store.pipe(
-      select(getGamesHistorStartDate(this.id)),
+      select(getGamesHistoryDateRange(this.id)),
       tap(r => {
         if (!r) {
           this.store.dispatch(InitGameHistory({id: this.id }));
@@ -98,7 +98,7 @@ export class ChartHistoryComponent implements OnInit {
         select(getGamesHistoryPerId(this.id)),
         filter(s => !!s),
         concatMap(s => of(s).pipe(
-          withLatestFrom(this.store.pipe(select(getGamesHistorStartDate(this.id))))
+          withLatestFrom(this.store.pipe(select(getGamesHistoryDateRange(this.id))))
         )),
         map(([s, latest]) => {
           return getConfig({
